@@ -1,0 +1,213 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design system definition.
+ *
+ * The @theme inline block maps CSS custom properties to Tailwind utility
+ * classes (e.g. --color-primary -> bg-primary, text-primary).
+ *
+ * The :root and .dark blocks define the actual color values using oklch.
+ * All colors MUST use oklch format.
+ *
+ * To add a new semantic color:
+ * 1. Add the variable to :root (light value) and .dark (dark value)
+ * 2. Register it in @theme inline as --color-<name>: var(--<name>)
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-gold-deep: var(--gold-deep);
+  --color-silver: var(--silver);
+  --color-navy: var(--navy);
+  --font-display: "Playfair Display", "Cormorant Garamond", serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+:root {
+  --radius: 0.875rem;
+  /* BNC Royal Guard — deep luxury palette */
+  --background: oklch(0.13 0.005 90);
+  --foreground: oklch(0.96 0.01 90);
+  --card: oklch(0.16 0.006 90);
+  --card-foreground: oklch(0.96 0.01 90);
+  --popover: oklch(0.14 0.005 90);
+  --popover-foreground: oklch(0.96 0.01 90);
+  --primary: oklch(0.82 0.14 86);          /* gold */
+  --primary-foreground: oklch(0.13 0.005 90);
+  --secondary: oklch(0.2 0.01 90);
+  --secondary-foreground: oklch(0.96 0.01 90);
+  --muted: oklch(0.2 0.008 90);
+  --muted-foreground: oklch(0.72 0.015 90);
+  --accent: oklch(0.82 0.14 86);
+  --accent-foreground: oklch(0.13 0.005 90);
+  --destructive: oklch(0.6 0.22 27);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.82 0.14 86 / 18%);
+  --input: oklch(0.82 0.14 86 / 25%);
+  --ring: oklch(0.82 0.14 86 / 60%);
+
+  --gold: oklch(0.82 0.14 86);
+  --gold-soft: oklch(0.88 0.1 88);
+  --gold-deep: oklch(0.62 0.13 70);
+  --silver: oklch(0.85 0.01 250);
+  --navy: oklch(0.22 0.05 260);
+
+  --gradient-gold: linear-gradient(135deg, oklch(0.62 0.13 70) 0%, oklch(0.88 0.1 88) 50%, oklch(0.72 0.14 80) 100%);
+  --gradient-hero: radial-gradient(120% 80% at 50% 0%, oklch(0.22 0.04 86 / 0.35), transparent 60%), linear-gradient(180deg, oklch(0.08 0.005 90) 0%, oklch(0.13 0.005 90) 100%);
+  --shadow-gold: 0 20px 60px -20px oklch(0.82 0.14 86 / 0.4);
+  --shadow-elegant: 0 25px 80px -30px oklch(0 0 0 / 0.7);
+
+  --chart-1: oklch(0.82 0.14 86);
+  --chart-2: oklch(0.62 0.13 70);
+  --chart-3: oklch(0.85 0.01 250);
+  --chart-4: oklch(0.22 0.05 260);
+  --chart-5: oklch(0.96 0.01 90);
+  --sidebar: oklch(0.13 0.005 90);
+  --sidebar-foreground: oklch(0.96 0.01 90);
+  --sidebar-primary: oklch(0.82 0.14 86);
+  --sidebar-primary-foreground: oklch(0.13 0.005 90);
+  --sidebar-accent: oklch(0.2 0.008 90);
+  --sidebar-accent-foreground: oklch(0.96 0.01 90);
+  --sidebar-border: oklch(0.82 0.14 86 / 18%);
+  --sidebar-ring: oklch(0.82 0.14 86 / 60%);
+}
+
+.dark {
+  /* Same palette — site is always dark */
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(60% 40% at 50% 0%, oklch(0.82 0.14 86 / 0.06), transparent 70%),
+      radial-gradient(40% 30% at 90% 40%, oklch(0.82 0.14 86 / 0.04), transparent 70%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background: var(--gold);
+    color: var(--background);
+  }
+}
+
+@utility text-gold-gradient {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility glass-card {
+  background: linear-gradient(135deg, oklch(1 0 0 / 0.04) 0%, oklch(1 0 0 / 0.01) 100%);
+  border: 1px solid oklch(0.82 0.14 86 / 0.18);
+  backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: var(--shadow-elegant);
+}
+
+@utility btn-gold {
+  background: var(--gradient-gold);
+  color: oklch(0.13 0.005 90);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  padding: 1rem 2rem;
+  border-radius: 999px;
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 0 0 0 oklch(0.82 0.14 86 / 0.5);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 50px -10px oklch(0.82 0.14 86 / 0.55);
+  }
+}
+
+@utility btn-ghost-gold {
+  border: 1px solid oklch(0.82 0.14 86 / 0.4);
+  color: var(--gold);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  padding: 1rem 2rem;
+  border-radius: 999px;
+  transition: all 0.35s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  &:hover {
+    background: oklch(0.82 0.14 86 / 0.08);
+    border-color: var(--gold);
+  }
+}
+
+@utility hairline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, oklch(0.82 0.14 86 / 0.5), transparent);
+}
+
+@utility section-pad {
+  padding-block: 7rem;
+  @media (max-width: 768px) {
+    padding-block: 4.5rem;
+  }
+}
