@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import emailjs from "@emailjs/browser";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import {
   Shield, Crown, Globe, Clock, Users, Award, Star, Phone, Mail, MapPin,
@@ -15,6 +16,12 @@ import sK9 from "@/assets/service-k9.jpg";
 import sResidential from "@/assets/service-residential.jpg";
 import sCorporate from "@/assets/service-corporate.jpg";
 import logo from "@/assets/logo.png";
+
+// ─── EmailJS Config ────────────────────────────────────────
+const EMAILJS_SERVICE_ID  = "service_swxs8hc";
+const EMAILJS_TEMPLATE_ID = "template_f1x38gp";
+const EMAILJS_PUBLIC_KEY  = "jiLF_SxkNcxJW6Hoj";
+// ──────────────────────────────────────────────────────────
 
 const EASE = [0.2, 0.8, 0.2, 1];
 
@@ -48,6 +55,23 @@ function Eyebrow({ children }) {
     <div className="inline-flex items-center gap-3 text-[0.7rem] uppercase tracking-[0.4em] text-gold">
       <span className="h-px w-8 bg-gold/50" />
       {children}
+    </div>
+  );
+}
+
+function Field({ label, placeholder, name, type = "text" }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="text-[0.7rem] uppercase tracking-[0.3em] text-muted-foreground">
+        {label}
+      </label>
+      <input
+        type={type}
+        name={name}
+        placeholder={placeholder}
+        required
+        className="rounded-xl border border-gold/20 bg-background/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-gold focus:outline-none"
+      />
     </div>
   );
 }
@@ -583,7 +607,7 @@ function Testimonials() {
                 {Array.from({ length: 5 }).map((_, k) => <Star key={k} className="h-4 w-4 fill-gold" />)}
               </div>
               <p className="mt-8 font-display text-2xl italic leading-relaxed text-foreground lg:text-3xl">
-                “{items[i].q}”
+                "{items[i].q}"
               </p>
               <div className="mt-8">
                 <div className="text-sm font-medium text-gold">{items[i].n}</div>
@@ -633,12 +657,27 @@ function CTA() {
 }
 
 function Contact() {
-  const info = [
-    { icon: Phone, label: "Phone", text: "+1 (800) 555 — ROYAL" },
-    { icon: Mail, label: "Email", text: "ops@bncroyalguard.com" },
-    { icon: MapPin, label: "Headquarters", text: "Royal Tower, International District" },
-    { icon: Clock, label: "Operations", text: "24 / 7 / 365 — Worldwide" },
-  ];
+  const formRef = useRef(null);
+  const [status, setStatus] = useState("idle");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus("sending");
+    try {
+      await emailjs.sendForm(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        formRef.current,
+        EMAILJS_PUBLIC_KEY
+      );
+      setStatus("sent");
+      formRef.current.reset();
+    } catch (err) {
+      console.error("EmailJS error:", err);
+      setStatus("error");
+    }
+  };
+
   return (
     <section id="contact" className="section-pad relative">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
@@ -654,65 +693,99 @@ function Contact() {
 
         <div className="mt-16 grid gap-10 lg:grid-cols-[1.2fr_1fr]">
           <Reveal>
-            <form onSubmit={(e) => e.preventDefault()} className="glass-card grid gap-5 rounded-3xl p-8 lg:p-10">
+            <form
+              ref={formRef}
+              onSubmit={handleSubmit}
+              className="glass-card grid gap-5 rounded-3xl p-8 lg:p-10"
+            >
               <div className="grid gap-5 sm:grid-cols-2">
-                <Field label="Name" placeholder="Your full name" />
-                <Field label="Email" placeholder="you@domain.com" />
+                <Field label="Name"  name="from_name"  placeholder="Your full name" />
+                <Field label="Email" name="from_email" placeholder="you@domain.com" type="email" />
               </div>
               <div className="grid gap-5 sm:grid-cols-2">
-                <Field label="Phone" placeholder="+1 ..." />
-                <Field label="Service Required" placeholder="VIP, Event, K9 ..." />
+                <Field label="Phone"            name="phone"   placeholder="+977 ..." />
+                <Field label="Service Required" name="service" placeholder="VIP, Event, K9 ..." />
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-[0.7rem] uppercase tracking-[0.3em] text-muted-foreground">Message</label>
-                <textarea rows={5} placeholder="Tell us about your requirement..."
-                  className="rounded-xl border border-gold/20 bg-background/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-gold focus:outline-none" />
+                <textarea
+                  name="message"
+                  rows={5}
+                  placeholder="Tell us about your requirement..."
+                  required
+                  className="rounded-xl border border-gold/20 bg-background/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-gold focus:outline-none"
+                />
               </div>
-              <button className="btn-gold mt-2 justify-center">Request Protection <ArrowRight className="h-4 w-4" /></button>
+              <button
+                type="submit"
+                disabled={status === "sending" || status === "sent"}
+                className={`btn-gold mt-2 justify-center transition-opacity ${
+                  status === "sending" || status === "sent" ? "opacity-70 cursor-not-allowed" : ""
+                }`}
+              >
+                {status === "idle"    && <><span>Request Protection</span><ArrowRight className="h-4 w-4" /></>}
+                {status === "sending" && <span>Sending…</span>}
+                {status === "sent"    && <span>Message Sent ✓</span>}
+                {status === "error"   && <><span>Try Again</span><ArrowRight className="h-4 w-4" /></>}
+              </button>
+              {status === "sent" && (
+                <p className="text-center text-sm text-green-400">
+                  Your request has been received. A senior advisor will contact you within hours.
+                </p>
+              )}
+              {status === "error" && (
+                <p className="text-center text-sm text-red-400">
+                  Submission failed. Please try again or reach us directly at{" "}
+                  <a href="tel:+9774534577" className="underline">+977-4534577</a>.
+                </p>
+              )}
             </form>
           </Reveal>
 
           <Reveal delay={0.15}>
             <div className="grid gap-4">
-              {info.map((it) => (
-                <div key={it.label} className="glass-card flex items-start gap-5 rounded-2xl p-6">
-                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-gold/30 bg-gold/5">
-                    <it.icon className="h-5 w-5 text-gold" strokeWidth={1.4} />
-                  </div>
-                  <div>
-                    <div className="text-[0.7rem] uppercase tracking-[0.3em] text-muted-foreground">{it.label}</div>
-                    <div className="mt-1 font-display text-lg text-foreground">{it.text}</div>
-                  </div>
+              <div className="glass-card flex items-start gap-5 rounded-2xl p-6">
+                <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-gold/30 bg-gold/5">
+                  <Phone className="h-5 w-5 text-gold" strokeWidth={1.4} />
                 </div>
-              ))}
-              <div className="relative h-48 overflow-hidden rounded-2xl border border-gold/20">
-                <div className="absolute inset-0 opacity-40" style={{
-                  backgroundImage: "linear-gradient(0deg, oklch(0.82 0.14 86 / 0.15) 1px, transparent 1px), linear-gradient(90deg, oklch(0.82 0.14 86 / 0.15) 1px, transparent 1px)",
-                  backgroundSize: "32px 32px",
-                }} />
-                <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-transparent to-background/80" />
-                <div className="absolute inset-0 grid place-items-center">
-                  <div className="text-center">
-                    <MapPin className="mx-auto h-6 w-6 text-gold" />
-                    <div className="mt-2 text-xs uppercase tracking-[0.3em] text-muted-foreground">Global Operations Hub</div>
-                  </div>
+                <div>
+                  <div className="text-[0.7rem] uppercase tracking-[0.3em] text-muted-foreground">Phone</div>
+                  <div className="mt-1 font-display text-lg text-foreground">+977-4534577</div>
                 </div>
+              </div>
+              <div className="glass-card flex items-start gap-5 rounded-2xl p-6">
+                <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-gold/30 bg-gold/5">
+                  <Mail className="h-5 w-5 text-gold" strokeWidth={1.4} />
+                </div>
+                <div>
+                  <div className="text-[0.7rem] uppercase tracking-[0.3em] text-muted-foreground">Email</div>
+                  <div className="mt-1 font-display text-lg text-foreground">info@bncsolutiongroup.com</div>
+                </div>
+              </div>
+              <div className="glass-card flex items-center gap-4 rounded-2xl px-6 py-4">
+                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-gold/30 bg-gold/5">
+                  <MapPin className="h-4 w-4 text-gold" strokeWidth={1.4} />
+                </div>
+                <div>
+                  <div className="text-[0.65rem] uppercase tracking-[0.3em] text-muted-foreground">Location</div>
+                  <div className="mt-1 text-base text-foreground">Mahalaxmi Plaza, Kalimati Road, KTM</div>
+                </div>
+              </div>
+              <div className="overflow-hidden rounded-2xl border border-gold/20 bg-card">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5510.561393474242!2d85.2962908741824!3d27.697302025936814!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb185bed72cacf%3A0x9848bc262229ae42!2sMahalaxmi%20Plaza!5e1!3m2!1sen!2snp!4v1781515889543!5m2!1sen!2snp"
+                  className="h-[280px] w-full"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
               </div>
             </div>
           </Reveal>
         </div>
       </div>
     </section>
-  );
-}
-
-function Field({ label, placeholder }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <label className="text-[0.7rem] uppercase tracking-[0.3em] text-muted-foreground">{label}</label>
-      <input placeholder={placeholder}
-        className="rounded-xl border border-gold/20 bg-background/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-gold focus:outline-none" />
-    </div>
   );
 }
 
@@ -745,17 +818,10 @@ function Footer() {
           <div>
             <div className="text-[0.7rem] uppercase tracking-[0.3em] text-gold">Contact</div>
             <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
-              <li className="flex items-center gap-3"><Phone className="h-4 w-4 text-gold" /> +1 (800) 555 — ROYAL</li>
-              <li className="flex items-center gap-3"><Mail className="h-4 w-4 text-gold" /> ops@bncroyalguard.com</li>
-              <li className="flex items-center gap-3"><MapPin className="h-4 w-4 text-gold" /> Royal Tower, International District</li>
+              <li className="flex items-center gap-3"><Phone className="h-4 w-4 text-gold" /> +977-4534577</li>
+              <li className="flex items-center gap-3"><Mail className="h-4 w-4 text-gold" /> info@bncsolutiongroup.com</li>
+              <li className="flex items-center gap-3"><MapPin className="h-4 w-4 text-gold" /> Mahalaxmi Plaza, Kalimati Road, KTM</li>
             </ul>
-            <div className="mt-6 flex gap-3">
-              {["in", "x", "ig", "fb"].map((s) => (
-                <a key={s} href="#" className="grid h-10 w-10 place-items-center rounded-full border border-gold/30 text-xs uppercase text-gold transition-colors hover:bg-gold/10">
-                  {s}
-                </a>
-              ))}
-            </div>
           </div>
         </div>
         <div className="hairline mt-16" />
