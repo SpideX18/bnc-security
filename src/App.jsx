@@ -450,7 +450,7 @@ function Industries() {
           {items.map((it, i) => (
             <Reveal key={it.label} delay={(i % 3) * 0.08}>
               <motion.div whileHover={{ y: -6 }} transition={{ duration: 0.4 }}
-                className={`group relative overflow-hidden rounded-3xl border border-gold/15 ${i % 4 === 1 ? "lg:translate-y-8" : ""}`}>
+                className="group relative overflow-hidden rounded-3xl border border-gold/15">
                 <div className="relative h-44 sm:h-64">
                   <img src={it.img} alt={it.label} loading="lazy"
                     className="h-full w-full object-cover opacity-60 transition-all duration-700 group-hover:scale-110 group-hover:opacity-80" />
