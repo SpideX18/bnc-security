@@ -5,7 +5,7 @@ import {
   Shield, Crown, Globe, Clock, Users, Award, Star, Phone, Mail, MapPin,
   ArrowRight, ArrowUpRight, Check, ChevronDown, Menu, X, Briefcase, Building2,
   Hotel, Home, Dog, Plane, Building, Landmark, ShieldCheck, Radio, Lock,
-  Target, Zap, Languages, UserCheck, FileText, Activity,
+  Target, Zap, Languages, UserCheck, FileText, Activity, BadgeDollarSign,
 } from "lucide-react";
 import hero from "@/assets/hero.jpg";
 import about from "@/assets/about.jpg";
@@ -91,6 +91,7 @@ function Nav() {
     { label: "Services", href: "#services" },
     { label: "Industries", href: "#industries" },
     { label: "Why Us", href: "#why" },
+    { label: "Pricing", href: "#pricing" },
     { label: "Contact", href: "#contact" },
   ];
   return (
@@ -628,6 +629,147 @@ function Testimonials() {
   );
 }
 
+function Pricing() {
+  const regions = [
+    {
+      flag: "🇳🇵",
+      country: "Nepal",
+      currency: "NPR",
+      price: "30,000",
+      period: "/ month",
+      highlight: false,
+      features: ["Armed & Unarmed Guards", "Static Post Security", "Residential Protection", "Local Deployment"],
+    },
+    {
+      flag: "🇮🇳",
+      country: "India",
+      currency: "INR",
+      price: "31,250",
+      period: "/ month",
+      highlight: false,
+      features: ["Corporate Security", "Event Protection", "Mobile Patrol", "K9 Services"],
+    },
+    {
+      flag: "🇦🇪",
+      country: "Dubai",
+      currency: "AED",
+      price: "2,429",
+      period: "/ month",
+      highlight: false,
+      features: ["VIP Close Protection", "Hotel Security", "Luxury Event Guards", "Executive Escort"],
+    },
+    {
+      flag: "🇪🇺",
+      country: "Europe",
+      currency: "EUR",
+      price: "1,183",
+      period: "/ month",
+      highlight: false,
+      features: ["International Protection", "Embassy Detail", "Cross-border Escort", "Crisis Response"],
+    },
+    {
+      flag: "🇺🇸",
+      country: "USA",
+      currency: "USD",
+      price: "2,020",
+      period: "/ month",
+      highlight: false,
+      features: ["Elite VIP Protection", "Celebrity Security", "Federal-grade Standards", "24/7 Command Center"],
+    },
+  ];
+
+  return (
+    <section id="pricing" className="section-pad relative overflow-hidden">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-30"
+        style={{
+          background: "radial-gradient(60% 50% at 50% 0%, oklch(0.82 0.14 86 / 0.12), transparent 70%)",
+        }}
+      />
+      <div className="mx-auto max-w-7xl px-6 lg:px-10">
+        <Reveal className="text-center">
+          <Eyebrow>Global Pricing</Eyebrow>
+          <h2 className="mx-auto mt-6 max-w-3xl font-display text-4xl font-medium leading-tight lg:text-6xl">
+            Transparent rates across{" "}
+            <span className="text-gold-gradient italic">every continent</span>.
+          </h2>
+          <p className="mx-auto mt-6 max-w-xl text-muted-foreground">
+            Elite protection priced to reflect local standards — the same royal-grade security, every market.
+          </p>
+        </Reveal>
+
+        <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          {regions.map((r, i) => (
+            <Reveal key={r.country} delay={i * 0.07}>
+              <motion.div
+                whileHover={{ y: -8, scale: 1.02 }}
+                transition={{ duration: 0.35, ease: EASE }}
+                className={`relative flex h-full flex-col overflow-hidden rounded-3xl border p-7 ${
+                  r.highlight
+                    ? "border-gold/60 bg-gradient-to-b from-gold/10 to-gold/[0.04]"
+                    : "glass-card border-gold/15"
+                }`}
+              >
+                {r.highlight && (
+                  <div className="absolute right-5 top-5 flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-[0.6rem] uppercase tracking-[0.25em] text-gold">
+                    <Star className="h-2.5 w-2.5 fill-gold text-gold" />
+                    Popular
+                  </div>
+                )}
+                <div className="mb-6 flex items-center gap-3">
+                  <span className="text-4xl leading-none">{r.flag}</span>
+                  <div>
+                    <div className="font-display text-xl font-medium text-foreground">{r.country}</div>
+                    <div className="text-[0.65rem] uppercase tracking-[0.3em] text-muted-foreground">{r.currency}</div>
+                  </div>
+                </div>
+                <div className="mb-1 flex items-end gap-1">
+                  {/* <BadgeDollarSign className="mb-1.5 h-5 w-5 shrink-0 text-gold" strokeWidth={1.5} /> */}
+                  <span className={`font-display text-3xl font-semibold leading-none tracking-tight ${r.highlight ? "text-gold-gradient" : "text-foreground"}`}>
+                    {r.price}
+                  </span>
+                </div>
+                <div className="mb-7 text-[0.7rem] uppercase tracking-[0.25em] text-muted-foreground">{r.period}</div>
+                <div className="hairline mb-7" />
+                <ul className="flex flex-1 flex-col gap-3">
+                  {r.features.map((f) => (
+                    <li key={f} className="flex items-start gap-2.5 text-sm text-muted-foreground">
+                      <div className="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full border border-gold/30 bg-gold/5">
+                        <Check className="h-2.5 w-2.5 text-gold" strokeWidth={2.5} />
+                      </div>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href="#contact"
+                  className={`mt-8 block rounded-full py-3 text-center text-[0.72rem] font-semibold uppercase tracking-[0.12em] transition-all duration-300 ${
+                    r.highlight
+                      ? "btn-gold"
+                      : "border border-gold/30 text-gold hover:border-gold hover:bg-gold/8"
+                  }`}
+                >
+                  Get a Quote
+                </a>
+              </motion.div>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal className="mt-12 text-center">
+          <p className="text-xs text-muted-foreground">
+            All rates shown are starting prices guards per month.{" "}
+            <a href="#contact" className="text-gold/80 underline underline-offset-4 hover:text-gold transition-colors">
+              Contact us
+            </a>{" "}
+            for a tailored quote based on your exact requirements.
+          </p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 function CTA() {
   return (
     <section className="section-pad relative">
@@ -808,7 +950,7 @@ function Footer() {
           </div>
           <FooterCol title="Navigate" items={[
             { l: "Home", h: "#home" }, { l: "About", h: "#about" }, { l: "Services", h: "#services" },
-            { l: "Industries", h: "#industries" }, { l: "Why Us", h: "#why" }, { l: "Contact", h: "#contact" },
+            { l: "Industries", h: "#industries" }, { l: "Why Us", h: "#why" }, { l: "Pricing", h: "#pricing" }, { l: "Contact", h: "#contact" },
           ]} />
           <FooterCol title="Services" items={[
             { l: "VIP Protection", h: "#services" }, { l: "Event Security", h: "#services" },
@@ -883,6 +1025,7 @@ export default function App() {
         <WhyUs />
         <Process />
         <Testimonials />
+        <Pricing />
         <CTA />
         <Contact />
       </main>
