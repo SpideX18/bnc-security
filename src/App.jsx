@@ -76,6 +76,83 @@ function Field({ label, placeholder, name, type = "text" }) {
   );
 }
 
+// ─── Continent / Country Data ──────────────────────────────
+const CONTINENT_COUNTRIES = {
+  "Africa": [
+    "Algeria", "Angola", "Cameroon", "DR Congo", "Egypt", "Ethiopia",
+    "Ghana", "Ivory Coast", "Kenya", "Libya", "Mali", "Morocco",
+    "Mozambique", "Nigeria", "Senegal", "South Africa", "Sudan",
+    "Tanzania", "Tunisia", "Uganda", "Zimbabwe", "Other (Africa)",
+  ],
+  "Asia": [
+    "Afghanistan", "Bangladesh", "Bhutan", "Cambodia", "China",
+    "Hong Kong", "India", "Indonesia", "Japan", "Kazakhstan",
+    "Malaysia", "Maldives", "Mongolia", "Myanmar", "Nepal",
+    "Pakistan", "Philippines", "Singapore", "South Korea",
+    "Sri Lanka", "Taiwan", "Thailand", "Uzbekistan", "Vietnam",
+    "Other (Asia)",
+  ],
+  "Europe": [
+    "Austria", "Belgium", "Czech Republic", "Denmark", "Finland",
+    "France", "Germany", "Greece", "Hungary", "Ireland", "Italy",
+    "Netherlands", "Norway", "Poland", "Portugal", "Romania",
+    "Russia", "Spain", "Sweden", "Switzerland", "Turkey",
+    "Ukraine", "United Kingdom", "Other (Europe)",
+  ],
+  "Middle East": [
+    "Bahrain", "Cyprus", "Iran", "Iraq", "Israel", "Jordan",
+    "Kuwait", "Lebanon", "Oman", "Qatar", "Saudi Arabia",
+    "Syria", "United Arab Emirates", "Yemen", "Other (Middle East)",
+  ],
+  "Americas": [
+    "Argentina", "Bolivia", "Brazil", "Canada", "Chile", "Colombia",
+    "Ecuador", "Guatemala", "Jamaica", "Mexico", "Panama", "Peru",
+    "Trinidad & Tobago", "United States", "Uruguay", "Venezuela",
+    "Other (Americas)",
+  ],
+  "Oceania": [
+    "Australia", "Fiji", "New Zealand", "Papua New Guinea",
+    "Samoa", "Solomon Islands", "Other (Oceania)",
+  ],
+};
+
+const CONTINENTS = Object.keys(CONTINENT_COUNTRIES);
+
+function SelectField({ label, name, value, onChange, options, placeholder, disabled = false }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="text-[0.7rem] uppercase tracking-[0.3em] text-muted-foreground">
+        {label}
+      </label>
+      <div className="relative">
+        <select
+          name={name}
+          value={value}
+          onChange={onChange}
+          required
+          disabled={disabled}
+          className={`w-full appearance-none rounded-xl border border-gold/20 bg-background/50 px-4 py-3 text-sm focus:border-gold focus:outline-none transition-colors ${
+            disabled
+              ? "cursor-not-allowed opacity-40 text-muted-foreground"
+              : value ? "text-foreground" : "text-muted-foreground/60"
+          }`}
+        >
+          <option value="" disabled hidden>{placeholder}</option>
+          {options.map((o) => (
+            <option key={o} value={o} className="bg-[oklch(0.16_0.006_90)] text-foreground">{o}</option>
+          ))}
+        </select>
+        <ChevronDown
+          className={`pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 transition-colors ${
+            disabled ? "text-muted-foreground/30" : "text-gold/70"
+          }`}
+        />
+      </div>
+    </div>
+  );
+}
+// ──────────────────────────────────────────────────────────
+
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -801,6 +878,13 @@ function CTA() {
 function Contact() {
   const formRef = useRef(null);
   const [status, setStatus] = useState("idle");
+  const [continent, setContinent] = useState("");
+  const [country, setCountry] = useState("");
+
+  const handleContinentChange = (e) => {
+    setContinent(e.target.value);
+    setCountry(""); // reset country when continent changes
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -814,6 +898,8 @@ function Contact() {
       );
       setStatus("sent");
       formRef.current.reset();
+      setContinent("");
+      setCountry("");
     } catch (err) {
       console.error("EmailJS error:", err);
       setStatus("error");
@@ -847,6 +933,25 @@ function Contact() {
               <div className="grid gap-5 sm:grid-cols-2">
                 <Field label="Phone"            name="phone"   placeholder="+977 ..." />
                 <Field label="Service Required" name="service" placeholder="VIP, Event, K9 ..." />
+              </div>
+              <div className="grid gap-5 sm:grid-cols-2">
+                <SelectField
+                  label="Continent"
+                  name="continent"
+                  value={continent}
+                  onChange={handleContinentChange}
+                  options={CONTINENTS}
+                  placeholder="Select continent..."
+                />
+                <SelectField
+                  label="Country"
+                  name="country"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  options={continent ? CONTINENT_COUNTRIES[continent] : []}
+                  placeholder={continent ? "Select country..." : "Select continent first"}
+                  disabled={!continent}
+                />
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-[0.7rem] uppercase tracking-[0.3em] text-muted-foreground">Message</label>
