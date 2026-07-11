@@ -964,7 +964,7 @@ function Contact() {
               {/* Auto Rate Field */}
               <div className="flex flex-col gap-2">
                 <label className="text-[0.7rem] uppercase tracking-[0.3em] text-muted-foreground">
-                  Auto Rate
+                  Prices Start From
                 </label>
                 <div className={`flex items-center gap-3 rounded-xl border px-4 py-3 transition-colors ${
                   autoRate
