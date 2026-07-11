@@ -118,6 +118,15 @@ const CONTINENT_COUNTRIES = {
 
 const CONTINENTS = Object.keys(CONTINENT_COUNTRIES);
 
+const CONTINENT_PRICES = {
+  "Africa":       { usd: "1,200", label: "$1,200 / month" },
+  "Asia":         { usd: "600",   label: "$600 / month"   },
+  "Europe":       { usd: "3,500", label: "$3,500 / month" },
+  "Middle East":  { usd: "1,200", label: "$1,200 / month" },
+  "Americas":     { usd: "5,000", label: "$5,000 / month" },
+  "Oceania":      { usd: "2,800", label: "$2,800 / month" },
+};
+
 function SelectField({ label, name, value, onChange, options, placeholder, disabled = false }) {
   return (
     <div className="flex flex-col gap-2">
@@ -709,49 +718,46 @@ function Testimonials() {
 function Pricing() {
   const regions = [
     {
-      flag: "🇳🇵",
-      country: "Nepal",
-      currency: "NPR",
-      price: "30,000",
-      period: "/ month",
+      flag: "🌍",
+      continent: "Africa",
+      price: "1,200",
       highlight: false,
-      features: ["Armed & Unarmed Guards", "Static Post Security", "Residential Protection", "Local Deployment"],
+      features: ["Armed & Unarmed Guards", "Static Post Security", "Event Protection", "Mobile Patrol"],
     },
     {
-      flag: "🇮🇳",
-      country: "India",
-      currency: "INR",
-      price: "31,250",
-      period: "/ month",
+      flag: "🌏",
+      continent: "Asia",
+      price: "600",
       highlight: false,
-      features: ["Corporate Security", "Event Protection", "Mobile Patrol", "K9 Services"],
+      features: ["Corporate Security", "Residential Protection", "K9 Services", "Local Deployment"],
     },
     {
-      flag: "🇦🇪",
-      country: "Dubai",
-      currency: "AED",
-      price: "2,429",
-      period: "/ month",
+      flag: "🌍",
+      continent: "Europe",
+      price: "3,500",
+      highlight: true,
+      features: ["International Protection", "Embassy Detail", "Cross-border Escort", "Crisis Response"],
+    },
+    {
+      flag: "🌙",
+      continent: "Middle East",
+      price: "1,200",
       highlight: false,
       features: ["VIP Close Protection", "Hotel Security", "Luxury Event Guards", "Executive Escort"],
     },
     {
-      flag: "🇪🇺",
-      country: "Europe",
-      currency: "EUR",
-      price: "1,183",
-      period: "/ month",
-      highlight: false,
-      features: ["International Protection", "Embassy Detail", "Cross-border Escort", "Crisis Response"],
-    },
-    {
-      flag: "🇺🇸",
-      country: "USA",
-      currency: "USD",
-      price: "2,020",
-      period: "/ month",
+      flag: "🌎",
+      continent: "Americas",
+      price: "5,000",
       highlight: false,
       features: ["Elite VIP Protection", "Celebrity Security", "Federal-grade Standards", "24/7 Command Center"],
+    },
+    {
+      flag: "🌊",
+      continent: "Oceania",
+      price: "2,800",
+      highlight: false,
+      features: ["VIP Protection", "Corporate Security", "Event Security", "Mobile Response"],
     },
   ];
 
@@ -775,9 +781,9 @@ function Pricing() {
           </p>
         </Reveal>
 
-        <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {regions.map((r, i) => (
-            <Reveal key={r.country} delay={i * 0.07}>
+            <Reveal key={r.continent} delay={i * 0.07}>
               <motion.div
                 whileHover={{ y: -8, scale: 1.02 }}
                 transition={{ duration: 0.35, ease: EASE }}
@@ -796,17 +802,17 @@ function Pricing() {
                 <div className="mb-6 flex items-center gap-3">
                   <span className="text-4xl leading-none">{r.flag}</span>
                   <div>
-                    <div className="font-display text-xl font-medium text-foreground">{r.country}</div>
-                    <div className="text-[0.65rem] uppercase tracking-[0.3em] text-muted-foreground">{r.currency}</div>
+                    <div className="font-display text-xl font-medium text-foreground">{r.continent}</div>
+                    <div className="text-[0.65rem] uppercase tracking-[0.3em] text-muted-foreground">USD</div>
                   </div>
                 </div>
                 <div className="mb-1 flex items-end gap-1">
-                  {/* <BadgeDollarSign className="mb-1.5 h-5 w-5 shrink-0 text-gold" strokeWidth={1.5} /> */}
+                  <span className="font-display text-lg font-semibold leading-none tracking-tight text-gold/80">$</span>
                   <span className={`font-display text-3xl font-semibold leading-none tracking-tight ${r.highlight ? "text-gold-gradient" : "text-foreground"}`}>
                     {r.price}
                   </span>
                 </div>
-                <div className="mb-7 text-[0.7rem] uppercase tracking-[0.25em] text-muted-foreground">{r.period}</div>
+                <div className="mb-7 text-[0.7rem] uppercase tracking-[0.25em] text-muted-foreground">/ month</div>
                 <div className="hairline mb-7" />
                 <ul className="flex flex-1 flex-col gap-3">
                   {r.features.map((f) => (
@@ -886,6 +892,8 @@ function Contact() {
     setCountry(""); // reset country when continent changes
   };
 
+  const autoRate = continent && CONTINENT_PRICES[continent] ? CONTINENT_PRICES[continent].label : "";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("sending");
@@ -952,6 +960,24 @@ function Contact() {
                   placeholder={continent ? "Select country..." : "Select continent first"}
                   disabled={!continent}
                 />
+              </div>
+              {/* Auto Rate Field */}
+              <div className="flex flex-col gap-2">
+                <label className="text-[0.7rem] uppercase tracking-[0.3em] text-muted-foreground">
+                  Auto Rate
+                </label>
+                <div className={`flex items-center gap-3 rounded-xl border px-4 py-3 transition-colors ${
+                  autoRate
+                    ? "border-gold/40 bg-gold/5"
+                    : "border-gold/10 bg-background/30"
+                }`}>
+                  <BadgeDollarSign className={`h-4 w-4 shrink-0 ${autoRate ? "text-gold" : "text-muted-foreground/30"}`} strokeWidth={1.5} />
+                  <span className={`text-sm font-medium tracking-wide ${autoRate ? "text-gold" : "text-muted-foreground/40"}`}>
+                    {autoRate || "Select a continent to see the starting rate"}
+                  </span>
+                </div>
+                {/* Hidden input so rate is sent via EmailJS */}
+                <input type="hidden" name="rate" value={autoRate} />
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-[0.7rem] uppercase tracking-[0.3em] text-muted-foreground">Message</label>
