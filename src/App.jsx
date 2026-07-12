@@ -162,6 +162,78 @@ function SelectField({ label, name, value, onChange, options, placeholder, disab
 }
 // ──────────────────────────────────────────────────────────
 
+function TrainingVideo() {
+  return (
+    <section id="training" className="section-pad relative overflow-hidden">
+      {/* ambient glow */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-25"
+        style={{
+          background:
+            "radial-gradient(55% 40% at 50% 0%, oklch(0.82 0.14 86 / 0.13), transparent 70%)",
+        }}
+      />
+      <div className="mx-auto max-w-5xl px-6 lg:px-10">
+        <Reveal className="text-center">
+          <Eyebrow>Guard Training</Eyebrow>
+          <h2 className="mx-auto mt-6 max-w-3xl font-display text-4xl font-medium leading-tight lg:text-6xl">
+            Know the{" "}
+            <span className="text-gold-gradient italic">standards</span>{" "}
+            we uphold.
+          </h2>
+          <p className="mx-auto mt-6 max-w-xl text-muted-foreground">
+            Understand the requirements and rigorous training behind every BNC Royal Guard operative — from exam standards to field-readiness.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.15} className="mt-14">
+          <div className="relative overflow-hidden rounded-3xl border border-gold/20 shadow-2xl shadow-black/60"
+            style={{
+              background: "linear-gradient(135deg, oklch(0.14 0.006 90), oklch(0.10 0.004 90))",
+            }}
+          >
+            {/* gold top accent line */}
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
+            {/* 16:9 responsive iframe wrapper */}
+            <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+              <iframe
+                className="absolute inset-0 h-full w-full"
+                src="https://www.youtube.com/embed/2RW9QkzL6n4?rel=0&modestbranding=1&color=white"
+                title="Security Guard Exam Requirements & Training Guide"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            </div>
+            {/* gold bottom accent line */}
+            <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+          </div>
+        </Reveal>
+
+        {/* 3 quick-info chips below video */}
+        <Reveal delay={0.25} className="mt-10">
+          <div className="flex flex-wrap justify-center gap-4">
+            {[
+              { icon: ShieldCheck, text: "Licensing Requirements" },
+              { icon: Target,      text: "Physical Standards"     },
+              { icon: FileText,    text: "Exam Preparation"       },
+            ].map(({ icon: Icon, text }) => (
+              <div
+                key={text}
+                className="glass-card flex items-center gap-2.5 rounded-full border border-gold/20 px-5 py-2.5"
+              >
+                <Icon className="h-4 w-4 text-gold" strokeWidth={1.6} />
+                <span className="text-[0.75rem] uppercase tracking-[0.25em] text-muted-foreground">
+                  {text}
+                </span>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -176,6 +248,7 @@ function Nav() {
     { label: "About", href: "#about" },
     { label: "Services", href: "#services" },
     { label: "Industries", href: "#industries" },
+    { label: "Training", href: "#training" },
     { label: "Why Us", href: "#why" },
     { label: "Pricing", href: "#pricing" },
     { label: "Contact", href: "#contact" },
@@ -964,7 +1037,7 @@ function Contact() {
               {/* Auto Rate Field */}
               <div className="flex flex-col gap-2">
                 <label className="text-[0.7rem] uppercase tracking-[0.3em] text-muted-foreground">
-                  Prices Start From
+                  Auto Rate
                 </label>
                 <div className={`flex items-center gap-3 rounded-xl border px-4 py-3 transition-colors ${
                   autoRate
@@ -1148,6 +1221,7 @@ export default function App() {
       <main>
         <Hero />
         <Trust />
+        <TrainingVideo />
         <About />
         <MissionVision />
         <Strengths />
